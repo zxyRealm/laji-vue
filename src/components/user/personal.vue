@@ -54,10 +54,8 @@
               }else {
                 callback(new Error('邮箱格式不正确，请重新输入'))
               }
-
             }
           };
-
           var validateMobile = (rule, value, callback) => {
             if (value === '') {
               callback(new Error('请输入手机号'));
@@ -68,13 +66,11 @@
               }else {
                 callback(new Error('手机号格式不正确，请重新输入'))
               }
-
             }
           };
           var validateAutograph = (rule,value,callback) => {
               if(value.length<=20){
-                let regx =  /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/;
-                if(regx.test(value)){
+                if(this.$regEmoji(value)){
                      callback(new Error("不可包含emoji表情图"))
                 }else {
                     callback()

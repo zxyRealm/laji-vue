@@ -7,7 +7,7 @@ exports.install = function(_this,option) {
   // 异步请求
   _this.prototype.$aycn = function (url, data,callBack, type,show) {
     let loading
-    url = 'http://www.lajixs.com'+url
+    url = '/api'+url
     if(typeof data ==='function'){
       callBack = data;
       data = {};

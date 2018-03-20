@@ -24,7 +24,7 @@
                       <!--<span class="btn ban" @click="handleClick(item.userId,'ban')">禁言</span>-->
                     </div>
                     <span class="fr harvest-icon" v-else-if="$route.name==='messageHarvest'">
-                      <img src="../../assets/image/icon/pepper-06.png" alt="">
+                      <img src="../../assets/image/icon/pepper@x1_1.png" alt="">
                       X {{item.spicyiTicketCount}}
                     </span>
                     <span class="fr clr9" v-else>{{item.commentDateTime | time('long')}}</span>
@@ -281,8 +281,8 @@
                 color:#333
                 >img
                   display inline-block
-                  width 25px
-                  vertical-align -12px
+                  width 16px
+                  vertical-align middle
               .handle
                 span
                   margin-left 40px

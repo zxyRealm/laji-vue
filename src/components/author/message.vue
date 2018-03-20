@@ -29,7 +29,7 @@
                 :value="item.bookId">
               </el-option>
             </el-select>
-    
+
             <el-select v-model="filterData.cid" popper-class="chapter-select" placeholder="请选择章节">
               <el-option label="全部" value=""></el-option>
               <el-option
@@ -118,7 +118,7 @@
                    }
                  }
                });
-               
+
              }else if(type==='delete2'){
                this.$ajax("/comm-deletereplyInfo",{
                  commentid:index
@@ -209,7 +209,7 @@
                 this.$message(json.msg)
               }
           })
-         
+
         },
         getChapterComment(page,type){
           let url,id;
@@ -256,7 +256,7 @@
                 }
               }
             });
-            
+
           }else if(type==='zan'){
               this.$ajax("/paragraphcomment-GiveThumbs",{
                 paragraphcommentid:this.chapterCommentList.list[index].id
@@ -279,6 +279,8 @@
                 }
               });
               this.chapterList = newArr
+            }else if(!json.data){
+              this.chapterList = []
             }
           },'get','json',true)
         },

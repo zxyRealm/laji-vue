@@ -6,7 +6,7 @@
           <el-breadcrumb  separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">主页</el-breadcrumb-item>
             <el-breadcrumb-item :to="{path:'/class_total/'+bookInfo.bookClassificationId+'/0/0/0/0/1/0'}" >{{bookInfo.classificationName}}</el-breadcrumb-item>
-            <el-breadcrumb-item>{{bookInfo.bookName}}</el-breadcrumb-item>
+            <el-breadcrumb-item :to="'/book/'+bookInfo.bookId">{{bookInfo.bookName}}</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
       </div>
@@ -74,13 +74,10 @@
                       })
                       item.counts = counts
                       newArr.push(item)
-                    }else {
-                      data.splice(index,1)
                     }
                   })
                   this.chapterList = newArr
                 }
-
               },'get')
             }
           })
@@ -112,6 +109,11 @@
           color #3878DE
   .chapter-list
     margin-top 26px
+  .el-breadcrumb__item:last-child
+    .el-breadcrumb__inner
+      cursor pointer!important
+      &:hover
+        color #f77583
 .chapter-list-item
   font-size 16px
   margin-bottom 12px

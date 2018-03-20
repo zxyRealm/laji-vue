@@ -39,7 +39,7 @@
         <!--url 属性必需设置为本地路径 如果引用的图片资源域名不同将无法剪裁上传-->
         <pic-cropper
           ref="avatarUpdate"
-          action="/api/sys-UserAvatarimgUpload"
+          action="/sys-UserAvatarimgUpload"
           :visible.sync="dialogTableVisible"
           @close="closeIt"
           :maxWidth="400"

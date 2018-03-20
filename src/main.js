@@ -11,7 +11,7 @@ import Consume from './components/custom/custom'
 import myIcon from './components/custom/icon.vue'
 import Hint from './components/common/hint.vue'
 import md5 from 'md5'
-import store from './store/store'
+import store from './store'
 import './assets/js/common'
 import filter from './filter'
 import ElementUI from 'element-ui'
@@ -35,7 +35,4 @@ var root = new Vue({
   template: '<App/>',
   components:{App}
 }).$mount("#app");
-//
-// document.addEventListener('DOMContentLoaded', function () {
-//   root.$mount('#app')
-// });
+

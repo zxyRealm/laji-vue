@@ -292,12 +292,12 @@
       .rd-item
         padding:10px 0 10px 45px
         /*font-size:14px*/
-        background :url("../../assets/image/icon/pepper-02.png") no-repeat left center
+        background :url("../../assets/image/icon/pepper@x1_1.png") no-repeat left center
         margin-right :50px
         &:nth-child(2)
-          background-image :url("../../assets/image/icon/pepper-03.png")
+          background-image :url("../../assets/image/icon/pepper@x1_3.png")
         &:nth-child(3)
-          background-image :url("../../assets/image/icon/pepper-01.png")
+          background-image :url("../../assets/image/icon/pepper@x1_2.png")
         &:last-child
           background-image :url("../../../static/img/icon/reading-ticket@2_01.png")
           margin-right 0

@@ -25,6 +25,7 @@
             <div class="search-item-cover">
               <router-link :to="'/book/'+item.bookId">
                 <img :src="item.bookImage" :alt="item.bookName">
+                <i v-if="item.bookAuthorization===2||item.bookAuthorization===3" class="zdy-icon__sign">签约</i>
               </router-link>
             </div>
             <div class="search-main">
@@ -216,10 +217,11 @@
         background #f6f6f6
         border 1px solid #c8c8c8
       .search-item-cover
+        position relative
         float:left
         width 124px
         height 162px
-        border-radius 7px
+        border-radius 8px
         overflow hidden
         a
           display inline-block

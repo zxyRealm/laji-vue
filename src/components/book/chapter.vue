@@ -192,20 +192,23 @@
                     </div>
                   </a>
                 </el-button>
-                <el-button class="btn" :style="{backgroundColor:intercalate[setData.theme].bgColor,borderColor:intercalate[setData.theme].brColor}">
+                <el-button class="btn share-wrapper" :style="{backgroundColor:intercalate[setData.theme].bgColor,borderColor:intercalate[setData.theme].brColor}">
                   <a class="clr9">
-                    <div class="share " >
+                    <div class="share" >
                       <i></i><p>分享</p>
-                      <div class="bdsharebuttonbox" data-tag="share_1">
-                        <a class="bds_more" data-cmd="more"></a>
-                      </div>
                     </div>
                   </a>
+                  <div class="bdsharebuttonbox" data-tag="share_1">
+                    <a class="bds_tsina" data-cmd="tsina"></a>
+                    <a class="bds_qzone" data-cmd="qzone"></a>
+                    <!--<a class="bds_tieba" data-cmd="tieba"></a>-->
+                    <a class="bds_sqq" data-cmd="sqq"></a>
+                    <a class="bds_weixin" data-cmd="weixin"></a>
+                  </div>
                 </el-button>
               </div>
-              <div class="read-side-bar read-side-bar-right" :style="{backgroundColor:intercalate[setData.theme].bgColor}">
-
-              </div>
+              <!--<div class="read-side-bar read-side-bar-right" :style="{backgroundColor:intercalate[setData.theme].bgColor}">-->
+              <!--</div>-->
               <div class="read-side-bar read-side-bar-bottom">
                 <el-button class="btn clr9" @click="myConsume('reward')" :style="{backgroundColor:intercalate[setData.theme].bgColor,borderColor:intercalate[setData.theme].brColor}">
                   <div class="reward">
@@ -385,8 +388,9 @@
                       bdText:json.data.bookInfo.bookName+'－'+json.data.chapterInfo.chapterTitle+'－辣鸡小说',
                       bdDesc:desc,
                       bdStyle:0,
+                      bdPic:json.data.bookInfo.bookImage,
                       bdMini:2,
-                      bdSize:16
+                      bdSize:24
                     },
                     share:{}
                   };
@@ -502,7 +506,7 @@
 //        发布间贴
         submitForm(index){
             if(this.$http.trim(this.FormReply.content).length>0){
-              if(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/.test(this.FormReply.content)){
+              if(this.$regEmoji(this.FormReply.content)){
                 this.$message({message:"内容不可包含emoji表情图",type:'warning'});
                 return false
               }
@@ -757,7 +761,7 @@
                 let len = this.$http.trim(instance.messageContent).length;
                 if(action==='confirm'){
                   if(len>0 && len<200){
-                    if(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/.test(instance.messageContent)){return false}
+                    if(this.$regEmoji(instance.messageContent)){return false}
                     this.$ajax("/add-getcomminfo",{
                       bookId:this.bookInfo.bookId,
                       bookName:this.bookInfo.bookName,
@@ -1030,6 +1034,19 @@
   .read-side-bar
     position: absolute;
     width: 60px;
+    .share-wrapper
+      position relative
+      &:hover
+        .bdsharebuttonbox
+           display block
+      .bdsharebuttonbox
+        position absolute
+        top 60px
+        margin-left 15px
+        display none
+        >a
+          display block
+          float inherit!important
     .el-button+.el-button
       margin-left :0
     .el-button.btn
@@ -1068,12 +1085,18 @@
         background-image :url(../../assets/image/icon/icon-collect@_02.png)!important
       .share
           position relative
+          &:hover
+            .bdsharebuttonbox
+              opacity 1
           .bdsharebuttonbox
+            &:hover
+              opacity 1
             position absolute
             top 0
-            left 0
+            left 50px
             height 100%
-            width 100%
+            width 136px
+            padding-left 6px
             opacity 0
             .bds_more
               display block
@@ -1086,11 +1109,11 @@
       .bComment i
         background-image :url(../../assets/image/icon/icon-message.png)
       .reward i
-        background-image :url(../../assets/image/icon/pepper-02.png)
+        background-image :url(../../assets/image/icon/pepper@x1_1.png)
       .recommend i
-        background-image :url(../../assets/image/icon/pepper-01.png)
+        background-image :url(../../assets/image/icon/pepper@x1_2.png)
       .gTicket i
-        background-image :url(../../assets/image/icon/pepper-03.png)
+        background-image :url(../../assets/image/icon/pepper@x1_3.png)
       .prePage i
         background-image :url(../../assets/image/icon/icon-arrow-left.png)
       .nextPage i

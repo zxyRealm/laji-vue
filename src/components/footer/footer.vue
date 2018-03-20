@@ -7,11 +7,11 @@
             友情链接
           </div>
           <ul>
-            <li v-for="(item,index) in link">
-              <a :href="item.href" target="_blank">
-                {{item.name}}
-              </a>
-            </li>
+            <!--<li v-for="(item,index) in link">-->
+              <!--<a :href="item.href" target="_blank">-->
+                <!--{{item.name}}-->
+              <!--</a>-->
+            <!--</li>-->
           </ul>
         </div>
         <div class="contact">

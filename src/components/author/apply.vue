@@ -54,14 +54,14 @@
                 <el-input v-model="applyInfo.userWeChat" :disabled="$route.name==='EditBook'"></el-input>
               </el-col>
             </el-form-item>
-            
+
             <el-form-item>
               <button class="submit-btn" @click.prevent="applyNext">下一步</button>
             </el-form-item>
           </el-form>
-         
+
           <el-form v-show="active>=2" :model="applyInfo" :rules="rules" label-width="104px" ref="applyForm2">
-            
+
             <el-form-item label="身份证号："  prop="userIdentityCard">
               <el-col class="line" :span="8">
                 <el-input v-model="applyInfo.userIdentityCard" placeholder="请输入身份证号" :disabled="$route.name==='EditBook'"></el-input>
@@ -70,7 +70,7 @@
                 <img class="ml10 mt10" src="./images/star2.png" alt="必填">
               </el-col>
             </el-form-item>
-  
+
             <el-form-item label="出生日期：" prop="userBorndate">
               <el-col class="line" :span="8">
                 <el-date-picker
@@ -80,13 +80,13 @@
                   :picker-options="pickerOptions0"
                   placeholder="选择日期范围">
                 </el-date-picker>
-               
+
               </el-col>
               <el-col class="line" :span="1">
                 <img class="ml10 mt10" src="./images/star2.png" alt="必填">
               </el-col>
             </el-form-item>
-            
+
             <el-form-item label="邮　　箱：" prop="userEmail">
               <el-col class="line" :span="8">
                 <el-input v-model="applyInfo.userEmail" :disabled="$route.name==='EditBook'"></el-input>
@@ -110,7 +110,7 @@
               </el-col>
               <p class="tip">请填写真实地址，以免寄送物品无法收取</p>
             </el-form-item>
-  
+
             <el-form-item label="个性签名：" prop="userAutograph">
               <el-col class="line autograph-warp" :span="8">
                 <el-input
@@ -153,7 +153,7 @@
                  }
              }
           };
-        
+
 //        验证作者笔名是否合法
         let validatePseudonym = (rule,value,callback) => {
           if(this.$http.trim(value)){
@@ -165,9 +165,9 @@
           }else {
             callback(new Error('请填写笔名！'));
           }
-    
+
         };
-        
+
 //        验证作者真实姓名是否合法
         let validateRealName = (rule,value,callback) => {
           if(this.$http.trim(value)){
@@ -179,9 +179,9 @@
           }else {
             callback(new Error('请填写您的真实姓名'));
           }
-          
+
         };
-        
+
 //        验证邮箱地址
         let validateEmail = (rule,value,callback) => {
             if(!value){
@@ -194,7 +194,7 @@
               }
             }
           };
-        
+
 //        验证手机号
         let validateMobile = (rule,value,callback) => {
           if(!value){
@@ -207,7 +207,7 @@
             }
           }
         };
-  
+
         let validateQQ = (rule,value,callback) => {
           if(!value){
             callback(new Error('请填写您的QQ号'));
@@ -221,8 +221,7 @@
         };
         let validateAutograph = (rule,value,callback) => {
           if(value.length<=20){
-            let regx =  /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/;
-            if(regx.test(value)){
+            if(this.$regEmoji(value)){
               callback(new Error("不可包含emoji表情图"))
             }else {
               callback()
@@ -231,7 +230,7 @@
             callback(new Error("长度不可超过20个字符"))
           }
         };
-        
+
         return {
             address:[],
             detail:'',
@@ -302,7 +301,7 @@
           }
         },
         apply(){
-         
+
           this.subLoad = true;
           this.$refs['applyForm2'].validate((valid) => {
             if (valid) {
@@ -344,7 +343,7 @@
               }
             })
         },
-        
+
       },
       created(){
         this.getInfo();
@@ -432,7 +431,7 @@
     background :#fcfafb
     padding-top :22px
     min-height :700px
-   
+
 .apply-form-wrap
   textarea
     resize none

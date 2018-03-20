@@ -111,7 +111,30 @@ function IdCodeValid(code){
   }
   return row;
 }
+
+function ResetChapterTxt(txt){
+  if(txt){
+    let reg1 = /[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}/g;
+    let reg2 = /<LG>[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}<\/?LG ?\/?>/g;
+    let newArr = [];
+    let idArr = txt.match(reg1);
+    let txtArr = txt.replace(/(&nbsp;||\s){2,4}/g,'').split(reg2);
+    if(!txt.split(reg2)){
+      txtArr = txt.split(reg2).splice(1)
+    }
+    idArr.forEach(function (item,index) {
+      newArr.push({
+        id:item,
+        content:txtArr[index]
+      })
+    });
+    return newArr;
+  }
+};
+
+
 export default {
   IdCodeValid,
-  formatTime
+  formatTime,
+  ResetChapterTxt
 }

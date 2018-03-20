@@ -354,7 +354,6 @@
                 let self = this;
                 this.monthOption2 = {
                   disabledDate(t) {
-//                    console.log(self.$formTime())
                     return t.getTime() > new Date(time.data.replace(/-/g,'/'));
                   }
                 }
@@ -383,7 +382,6 @@
                     }
                   });
                   this.tableList = JSON.parse(JSON.stringify(json.data.Alldata));
-                  console.log(this.tableList)
                   let val = this.formData(this.tableList);
                   this.chartData = val;
                   this.option.title.text = '总收入: ' + val.total;

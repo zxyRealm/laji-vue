@@ -104,7 +104,7 @@
 
       <pic-cropper
         ref="bookCoverUpdate"
-        action="/api/sys-BookCoverAvatarimgUpload"
+        action="/sys-BookCoverAvatarimgUpload"
         :visible.sync="dialogTableVisible"
         :sync="true"
         @syncUrl="setCover"
@@ -158,6 +158,21 @@
           }
         }
       };
+      let bookIntro = (rule, value, callback) => {
+        if(!value){
+          callback(new Error("请填写作品简介"))
+        }else {
+          if(this.$regEmoji(value)){
+            callback(new Error("不可包含emoji表情图"))
+          }else {
+            if(value.length>400){
+              callback(new Error('总长度不可超过400个字符'))
+            }else {
+              callback()
+            }
+          }
+        }
+      }
       return {
         bookId:'',
         fullscreenLoading:false,
@@ -192,8 +207,7 @@
             { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
           ],
           bookIntroduction: [
-            { required: true, message: '请填写作品简介', trigger: 'blur' },
-            { min:1,max:400, message: '作品简介长度为400字符以内', trigger: 'blur' }
+            { required: true, validator:bookIntro , trigger: 'change' },
           ],
           bookAuthorization: [
             { required: true,type:'number', message: '请选择发布状态', trigger: 'change' }
@@ -317,10 +331,6 @@
     },
     computed:{
       "words"(){
-        let regx =  /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/;
-        if(regx.test(this.bookInfo.bookIntroduction)){
-          this.$message({message:"不可包含emoji表情图",type:'warning'})
-        }
         this.bookInfo.bookIntroduction = this.bookInfo.bookIntroduction.replace(/\n+/g,'\n\n');
         return this.$http.trim(this.bookInfo.bookIntroduction).length
       }

@@ -104,31 +104,42 @@
     data() {
       let validateContent = (rule,value,callback) =>{
          if(this.ruleForm.chapterLength){
+            console.log("content blur")
+             this.ruleForm.chapterContent = this.ruleForm.chapterContent.replace(/^\s*\n+\s*/,'').replace(/\s*\n+\s*/g,'\n\n　　');
              if(this.ruleForm.chapterLength>20000){
                  this.isPending = false;
                  this.$message({message:'总长度不可超过20000个字符',type:'warning'});
              }else {
-                 callback()
+                 if(this.$regEmoji(value)){
+                    this.$message({ message:'不可包含emoji表情图',type:'warning' })
+                 }else {
+                    callback()
+                 }
              }
          }else {
              callback(new Error(' '));
          }
       };
       let validateVolume = (rule,value,callback) => {
-          if(!value||this.$http.trim(value).length<1){
+          value = this.$http.trim(value)
+          if(!value||value.length<1){
             this.volumeForm.volumeName = '';
             callback(new Error("卷名不能为空"))
           }else {
-            this.$ajax("/books-getCheckVolume",{
-              volumeName:value,
-              bookid:this.ruleForm.bookId
-            },json => {
-              if (json.returnCode===200) {
-                callback()
-              } else {
-                callback(new Error(json.msg))
-              }
-            });
+            if(value.length>20){
+              callback(new Error("总长度不可超过20个字符"))
+            }else {
+              this.$ajax("/books-getCheckVolume",{
+                volumeName:value,
+                bookid:this.ruleForm.bookId
+              },json => {
+                if (json.returnCode===200) {
+                  callback()
+                } else {
+                  callback(new Error(json.msg))
+                }
+              });
+            }
           }
        };
       let validateCheckCn = (rule,value,callback) => {
@@ -152,6 +163,17 @@
               }
             })
           }
+      };
+      let validateAuthorSay = (rule,value,callback) =>{
+        if(value){
+          if(this.$regEmoji(value)){
+            callback(new Error("不可包含emoji表情图"))
+          }else {
+            callback()
+          }
+        }else {
+          callback(new Error("请添加作者的话"));
+        }
       };
       return {
         isPending:false, //避免网络不良时造成重复提交
@@ -177,8 +199,7 @@
         },
         rule:{
           volumeName: [
-            { required: true,validator:validateVolume , trigger: 'blur' },
-            { min:1, max:20, message:'总长度不可超过20个字符',trigger:'blur'}
+            { required: true,validator:validateVolume , trigger: 'blur' }
           ]
         },
         rules: {
@@ -195,7 +216,7 @@
             { required: true,validator:validateContent,trigger:'blur' }
           ],
           authorWords: [
-            { required: true,message:'请添加作者的话',trigger:'blur' }
+            { required: true,validator:validateAuthorSay ,trigger:'change' }
           ]
         }
       };
@@ -336,8 +357,7 @@
     },
     watch:{
       "ruleForm.chapterContent":function (val) {
-        let regx =  /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/;
-        if(regx.test(val)){
+        if(this.$regEmoji(val)){
           this.$message({message:"不可包含emoji表情图",type:'warning'})
         }
         this.ruleForm.chapterContent = val.replace(/^\s*\n+\s*/,'').replace(/\s*\n+\s*/g,'\n\n　　');
@@ -345,10 +365,6 @@
       "ruleForm.authorWords":function (val) {
         if (this.$http.trim(val).length > 100) {
           val = val.substr(0,100);
-        }
-        let regx =  /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/;
-        if(regx.test(val)){
-          this.$message({message:"不可包含emoji表情图",type:'warning'})
         }
         this.ruleForm.authorWords = val.replace(/^\s*\n+\s*/,'').replace(/\s*\n+\s*/g,'\n\n　　');
       }

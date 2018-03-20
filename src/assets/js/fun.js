@@ -107,6 +107,13 @@ exports.install = function (Vue, options) {
       }
     });
   };
+
+  // 校验文本内容是否包含emoji 表情
+  Vue.prototype.$regEmoji = function (val) {
+    let regx = /[\ud83c-\ud83e][\udc00-\udfff]|[\u2600-\u27ff]/
+    return regx.test(val)
+  }
+
   Vue.prototype.$cancelSave = function(bid){
     console.log(bid)
     this.$ajax("/bookshelf-delteuserbookshelfById",{ bookid:bid },json=>{

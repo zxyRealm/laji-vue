@@ -184,7 +184,7 @@
           }
         },
         messageContent:function (val){
-          if(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/.test(val)){
+          if(this.$regEmoji(val)){
             this.tipShow = 'visible'
           }else {
             this.tipShow = 'hidden'
@@ -458,11 +458,11 @@
         height :100%
         width :100%
         border-radius :5px
-        border :1px solid #efefef
+        border :2px solid #efefef
         padding-top :80px
         box-shadow :none
-        background:#fbf3f3  url("../../../../static/img/coin-188.png") no-repeat left top
-        background-size:cover
+        background:#fbf3f3  url("../../../../static/img/coin-188.png") no-repeat center
+        /*background-size:cover*/
     .el-radio-button:nth-child(2) .el-radio-button__inner
       background-image  url("../../../../static/img/coin-288.png")
     .el-radio-button:nth-child(3) .el-radio-button__inner
@@ -481,10 +481,11 @@
       width 156px
       height :156px
       background-repeat no-repeat
+      background-size contain
       &.ticket
         background-image :url("../../../../static/img/icon-ticket.png")
       &.recommend
-        background-image :url("../../../../static/img/icon-reward.png")
+        background-image :url("../../../../static/img/icon-recommend.png")
       /*border-bottom:1px solid #f77583*/
       p.info
         padding-left :100px

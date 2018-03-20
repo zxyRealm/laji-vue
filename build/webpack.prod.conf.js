@@ -95,18 +95,18 @@ var webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ]),
-    new PrerenderSpaPlugin(path.join(__dirname, '../dist'), [
-      '/index',
-      '/login',
-      '/register',
-      '/download/app',
-      '/find_page',
-      '/welfare',
-      '/news/2',
-      '/news/3',
-      '/news/4',
-      '/news/5'
-    ])
+    // new PrerenderSpaPlugin(path.join(__dirname, '../dist'), [
+    //   '/',
+    //   '/login',
+    //   '/register',
+    //   '/download/app',
+    //   '/find_page',
+    //   '/welfare',
+    //   '/news/2',
+    //   '/news/3',
+    //   '/news/4',
+    //   '/news/5'
+    // ])
   ]
 });
 

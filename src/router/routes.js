@@ -65,6 +65,7 @@ Vue.use(Router,VueAxios,Axios);
 Vue.config.productionTip = false;
 const router = new Router({
   mode:"history",
+  scrollBehavior: () => ({ y: 0 }),
   routes:[
     {
       path:'*',
@@ -659,7 +660,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
     if(uid){
       Zepto.ajax({
-        url:"/api/person-checkLoginState?t="+Math.random(),
+        url:"/person-checkLoginState?t="+Math.random(),
         type:'post',
         success:(json) => {
           if(json.returnCode===200){
@@ -681,7 +682,7 @@ router.beforeEach((to, from, next) => {
               next()
             }
           }else{
-            router.app.$options.components.App.store.state.userInfo = {};
+            router.app.$options.store.state.userInfo = {};
             next({
               path: '/login',
               query: {redirect: to.fullPath}
@@ -693,7 +694,7 @@ router.beforeEach((to, from, next) => {
         }
       });
     }else {
-      router.app.$options.components.App.store.state.userInfo = {};
+      router.app.$options.store.state.userInfo = {};
       next({
         path: '/login',
         query: {redirect: to.fullPath}
@@ -716,7 +717,7 @@ router.afterEach(() => {
   // window._bd_share_main 记录了share.js版本导致不会重新执行
   window._bd_share_main?window._bd_share_main = undefined:0
 
-  window.scrollTo(0,0)
+  // window.scrollTo(0,0)
   setTimeout(()=>{
     var _hmt = _hmt || [];
     (function() {

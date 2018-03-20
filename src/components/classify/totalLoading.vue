@@ -8,7 +8,7 @@
         <li v-for="(item,$index) in dataList.list" class="clear stack-item">
         <router-link :to="'/book/'+item.bookId" >
           <img class="book-cover" :src="item.bookImage" alt="">
-          <i v-if="item.bookAuthorization" class="zdy-icon__sign">签约</i>
+          <i v-if="item.bookAuthorization==2||item.bookAuthorization==3" class="zdy-icon__sign">签约</i>
         </router-link>
         <div class="si-fr">
           <div class="bTitle">
@@ -51,7 +51,7 @@
           <div class="si-bIntro overLine2">
             <span class="clr9">简介：</span>
             {{item.bookIntroduction}}
-            
+
           </div>
         </div>
       </li>
@@ -68,7 +68,7 @@
       </el-pagination>
     </template>
   </div>
-  
+
 </template>
 <script type="text/ecmascript-6">
     export default{

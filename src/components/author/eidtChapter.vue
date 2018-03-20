@@ -106,10 +106,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-
-//  import ElCheckbox from "../../../node_modules/element-ui/packages/checkbox/src/checkbox";
   export default {
-//    components: {ElCheckbox},
     data() {
       let validateContent = (rule,value,callback) =>{
         if(this.ruleForm.chapterLength){
@@ -117,10 +114,25 @@
             this.isLoading = false;
             this.$message({message:'总长度不可超过20000个字符',type:'warning'});
           }else {
-            callback()
+            if(this.$regEmoji(value)){
+              this.$message({ message:'不可包含emoji表情图',type:'warning' })
+            }else {
+              callback()
+            }
           }
         }else {
           callback(new Error(" "));
+        }
+      };
+      let validateAuthorSay = (rule,value,callback) =>{
+        if(value){
+          if(this.$regEmoji(value)){
+            callback(new Error("不可包含emoji表情图"))
+          }else {
+            callback()
+          }
+        }else {
+          callback(new Error("请添加作者的话"));
         }
       };
       let validateVolume = (rule,value,callback) => {
@@ -224,7 +236,7 @@
             { required: true, type:'date', message: '请选取时间', trigger: 'blur' }
           ],
           authorWords: [
-            { required: true, message: '请添加作者的话', trigger: 'blur' }
+            { required: true,validator:validateAuthorSay ,trigger: 'change' }
           ]
         }
       };
@@ -233,7 +245,6 @@
 //        添加新章节
       submitForm(type) {
         this.$myLoad()
-//        this.isLoading = true;
         this.$refs['editChapterForm'].validate((valid) => {
           if (valid) {
             if(type==='draft'){
@@ -397,11 +408,12 @@
       editChange(e){
         let parents = document.getElementById('content_edit_sole');
         let pList = parents.childNodes;
-        this.ruleForm.chapterContent = this.$http.trim(parents.innerText);
+        this.ruleForm.chapterContent = this.$http.trim(parents.innerText).replace(/(&nbsp;)/g,'');
         if(pList.length>0){
           for(let i=0,len=pList.length;i<len;i++){
 //            重置样式,防止粘贴复制带来过来的内联样式
             pList[i].style = null;
+            pList[i].innerText = this.$http.trim(pList[i].innerText)
             if(this.$http.trim(pList[i].innerText).length){
                 if(!pList[i].getAttribute("uuid")){
                     pList[i].setAttribute("uuid","<X><XG>")
@@ -411,10 +423,10 @@
                     }
                 }
               if(pList[i].childNodes.length>1){
-                pList[i].innerHTML = pList[i].innerText;
+                pList[i].innerHTML = this.$http.trim(pList[i].innerText).replace(/(&nbsp;)/g,'');
               }
             }else {
-              pList[i].setAttribute('uuid','<X><XG>');
+                pList[i].setAttribute('uuid','<X><XG>');
             }
           }
         }
@@ -469,10 +481,6 @@
     },
     watch:{
       "ruleForm.chapterContent":function (val) {
-        let regx =  /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/;
-        if(regx.test(val)){
-          this.$message({message:"不可包含emoji表情图",type:'warning'})
-        }
         if(this.ruleForm.whetherPublic===1){
           this.ruleForm.chapterContent = val.replace(/^\s*\n+\s*/,'').replace(/\s*\n+\s*/g,'\n\n　　');
         }
@@ -480,10 +488,6 @@
       "ruleForm.authorWords":function (val) {
         if (this.$http.trim(val).length > 100) {
           val = val.substr(0,100);
-        }
-        let regx =  /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/;
-        if(regx.test(val)){
-          this.$message({message:"不可包含emoji表情图",type:'warning'})
         }
         this.ruleForm.authorWords = val.replace(/^\s*\n+\s*/, '').replace(/\s*\n+\s*/g, '\n\n　　');
       }

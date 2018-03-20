@@ -3,6 +3,12 @@ var utils = require('./utils');
 var config = require('../config');
 var vueLoaderConfig = require('./vue-loader.conf');
 var webpack = require("webpack");
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+
+
+// var isProd = process.env.NODE_ENV === 'production'
+
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -24,10 +30,12 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       'static':path.join(__dirname, '../static'),
-      'assets':path.join(__dirname,'src/assets')
+      'assets':path.join(__dirname,'src/assets'),
+      'create-api':path.join(__dirname,'src/api/create-api-client.js')
     }
   },
   module: {
+    noParse: /es6-promise\.js$/,
     rules: [
       {
         test: /\.vue$/,

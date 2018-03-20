@@ -1,13 +1,13 @@
 <template id="Detail">
     <div v-wechat-title="Title+'－辣鸡小说'" class="container clear" :style="{ minHeight:minHeight + 'px'}">
-      <template v-if="bookInfo">
+      <template v-if="bookDetail.bookListInfo">
         <div class="subNavWrap">
           <span class="fl">当前位置：</span>
           <div class="sub-nav">
             <el-breadcrumb  separator-class="el-icon-arrow-right">
               <el-breadcrumb-item :to="{ path: '/' }">主页</el-breadcrumb-item>
-              <el-breadcrumb-item :to="{path:'/class_total/'+bookInfo.bookClassificationId+'/0/0/0/0/1/0'}" >{{bookInfo.classificationName}}</el-breadcrumb-item>
-              <el-breadcrumb-item>{{bookInfo.bookName}}</el-breadcrumb-item>
+              <el-breadcrumb-item :to="{path:'/class_total/'+bookDetail.bookListInfo.bookClassificationId+'/0/0/0/0/1/0'}" >{{bookDetail.bookListInfo.classificationName}}</el-breadcrumb-item>
+              <el-breadcrumb-item>{{bookDetail.bookListInfo.bookName}}</el-breadcrumb-item>
             </el-breadcrumb>
           </div>
         </div>
@@ -15,48 +15,47 @@
           <!--书籍详情信息 start-->
           <div class="bookWrap clear">
             <div class="bw-left">
-              <img class="cover" :src="bookInfo.bookImage" :alt="bookInfo.bookName">
-              <i v-if="bookInfo.bookAuthorization" class="zdy-icon__sign">签约</i>
-
+              <img class="cover" :src="bookDetail.bookListInfo.bookImage" :alt="bookDetail.bookListInfo.bookName">
+              <i v-if="bookDetail.bookListInfo.bookAuthorization===2||bookDetail.bookListInfo.bookAuthorization===3" class="zdy-icon__sign">签约</i>
             </div>
             <div class="bw-right">
               <div class="b-title">
-                <strong>{{bookInfo.bookName}}</strong>
-                <i v-if="bookInfo.bookCheckStatus===2" class="zdy-icon__vip big"></i>
-                <span class="b-state" :class="{end:bookInfo.bookStatus}">{{bookInfo.bookStatus?'已完结':'连载中'}}</span>
+                <strong>{{bookDetail.bookListInfo.bookName}}</strong>
+                <i v-if="bookDetail.bookListInfo.bookCheckStatus===2" class="zdy-icon__vip big"></i>
+                <span class="b-state" :class="{end:bookDetail.bookListInfo.bookStatus}">{{bookDetail.bookListInfo.bookStatus?'已完结':'连载中'}}</span>
               </div>
               <div class="b-info">
                 <p class="base">
                 <span>作者：
-                  <router-link class="txt-overflow" :to="'/reader/'+bookInfo.bookWriterId">{{bookInfo.writerName}}</router-link>
+                  <router-link class="txt-overflow" :to="'/reader/'+bookDetail.bookListInfo.bookWriterId">{{bookDetail.bookListInfo.writerName}}</router-link>
                 </span>
-                  <span v-if="totalData.lastChapterView">更新：{{totalData.lastChapterView.releaseTime|time }}</span>
-                  <span>字数：{{bookInfo.bookWorldCount}}</span>
-                  <span>分类：{{bookInfo.classificationName}}</span>
+                  <span v-if="bookDetail.lastChapterView">更新：{{bookDetail.lastChapterView.releaseTime|time }}</span>
+                  <span>字数：{{bookDetail.bookListInfo.bookWorldCount}}</span>
+                  <span>分类：{{bookDetail.bookListInfo.classificationName}}</span>
                 </p>
                 <p>标签：
-                  <span v-for="(item,$index) in bookInfo.bookLabel">{{item.bookLableName}}{{($index==bookInfo.bookLabel.length-1)?'':'、'}}</span>
+                  <span v-for="(item,$index) in bookDetail.bookLable">{{item.bookLableName}}{{($index==bookDetail.bookLable.length-1)?'':'、'}}</span>
                 </p>
                 <div class="bi-center">
                   <p >
-                    <span>点击：{{bookData?bookData.bookClickCount:0 | number}}</span>
+                    <span>点击：{{bookDetail.bookdate?bookDetail.bookdate.bookClickCount:0 | number}}</span>
                     <span>书评：{{commentList.total?commentList.total:0}}</span>
-                    <span>吐槽：{{bookData?bookData.tucaoIndex:0}}</span>
+                    <span>吐槽：{{bookDetail.bookdate?bookDetail.bookdate.tucaoIndex:0}}</span>
                   </p>
                   <p >
                   <span class="red-pepper">
-                    打赏：{{bookData?bookData.areward:0}}
+                    打赏：{{bookDetail.bookdate?bookDetail.bookdate.areward:0}}
                   </span>
                     <span class="green-pepper">
-                    小米椒：{{bookData?bookData.bookRecommend:0}}
+                    小米椒：{{bookDetail.bookdate?bookDetail.bookdate.bookRecommend:0}}
                   </span>
                     <span class="gloden-pepper">
-                    金椒：{{bookData?bookData.goldenTicket:0}}
+                    金椒：{{bookDetail.bookdate?bookDetail.bookdate.goldenTicket:0}}
                   </span>
                   </p>
                 </div>
                 <div class="bookIntro scrollBar" :class="showDetail?' auto':''" >
-                  <div class="text" v-html="bookInfo.bookIntroduction"></div>
+                  <div class="text" v-html="bookDetail.bookListInfo.bookIntroduction"></div>
                   <span class="show" @click="showDetail?showDetail=false:showDetail=true">
                     {{showDetail?'全部收起':'全部展开'}}
                     <i :class="'el-icon-' + (showDetail?'minus':'plus')" ></i>
@@ -65,8 +64,8 @@
               </div>
               <div class="b-handle clear">
                 <div class="clear fl">
-                  <router-link class="read" :to="'/chapter/'+bookInfo.firstChapter" target="_blank">点击阅读</router-link>
-                  <a class="addShelf" @click="addBookshelf" href="javascript:;" >{{bookInfo.collectionStatus?'已收藏':'收藏'}}</a>
+                  <router-link v-if="bookDetail.chapterOne" class="read" :to="'/chapter/'+bookDetail.chapterOne.id" target="_blank">点击阅读</router-link>
+                  <a class="addShelf" @click="addBookshelf" href="javascript:;" >{{bookDetail.bookListInfo.collectionStatus?'已收藏':'收藏'}}</a>
                 </div>
                 <span class="spec">|</span>
                 <div class="clear">
@@ -80,43 +79,40 @@
           <div class="bd-share-box clear">
             <span class="fl">分享到：</span>
             <div class="bdsharebuttonbox fl" data-tag="share_1">
-              <a class="bds_mshare" data-cmd="mshare"></a>
-              <a class="bds_qzone" data-cmd="qzone" href="#"></a>
               <a class="bds_tsina" data-cmd="tsina"></a>
-              <a class="bds_baidu" data-cmd="baidu"></a>
-              <a class="bds_renren" data-cmd="renren"></a>
-              <a class="bds_tqq" data-cmd="tqq"></a>
-              <a class="bds_more" data-cmd="more">更多</a>
+              <a class="bds_qzone" data-cmd="qzone"></a>
+              <a class="bds_sqq" data-cmd="sqq"></a>
+              <a class="bds_weixin" data-cmd="weixin"></a>
             </div>
           </div>
           <!--章节更新及章节列表信息 start-->
           <div class="book-chapter">
             <div class="tabWrap">
-              <router-link v-if="activeName1==='first' && totalData.lastChapterView" class="reading more" :to="'/chapter/'+totalData.lastChapterView.id" target="_blank">阅读本章节 <i class="el-icon-d-arrow-right"></i></router-link>
+              <router-link v-if="activeName1==='first' && bookDetail.lastChapterView" class="reading more" :to="'/chapter/'+bookDetail.lastChapterView.id" target="_blank">阅读本章节 <i class="el-icon-d-arrow-right"></i></router-link>
               <template>
                 <el-tabs v-model="activeName1" type="card" @tab-click="handleClick1">
                   <el-tab-pane label="最新章节"  name="first">
                     <div class="c-main">
-                      <div class="c-title"  v-if="totalData.lastChapterView" >
+                      <div class="c-title"  v-if="bookDetail.lastChapterView" >
                         <p class="txt-overflow">
                           <router-link
-                            :to="'/chapter/'+ totalData.lastChapterView.id"
-                            target="_blank">{{ totalData.lastChapterView.chapterTitle }}
+                            :to="'/chapter/'+ bookDetail.lastChapterView.id"
+                            target="_blank">{{ bookDetail.lastChapterView.chapterTitle }}
                           </router-link>
                         </p>
-                        <span class="date">更新时间：{{ totalData.lastChapterView.releaseTime | time('long')}}</span>
+                        <span class="date">更新时间：{{ bookDetail.lastChapterView.releaseTime | time('long')}}</span>
                       </div>
                       <div class="c-content overLine4">
-                        <p class="c-txt" v-for="item in bookInfo.lastChapter">
+                        <p class="c-txt" v-for="item in bookDetail.bookListInfo.lastChapter">
                           {{item.content}}
                         </p>
                       </div>
                     </div>
                   </el-tab-pane>
                   <el-tab-pane label="全部目录" name="second">
-                    <el-collapse v-model="activeNames" class="b_chapter_list">
+                    <el-collapse v-model="activeName" class="b_chapter_list">
                       <template v-for="(item,$index) in chapterList">
-                        <el-collapse-item :title="item.volumeName" :name="$index+1" :icon="'el-icon-caret-right'">
+                        <el-collapse-item :title="item.volumeName" :name="item.volumeId" :icon="'el-icon-caret-right'">
                           <div v-for="(item2,$index2) in item.resultList" class="collapse-item-link txt-overflow">
                             <router-link :to="'/chapter/'+item2.id" target="_blank" @click='visible=false' :title="item2.chapterTitle" :alt="item2.chapterTitle" class="txt-overflow" >{{item2.chapterTitle}}</router-link>
                             <i v-if="item2.chapterIsvip" class="zdy-icon__vip"></i>
@@ -139,7 +135,7 @@
                 </div>
             </div>
             <div class="review-list">
-              <div v-if="commentList.list.length>6" :class="$store.state.userInfo.userName?'reply':'reply no-login'">
+              <div v-if="commentList.list && commentList.list.length>6" :class="$store.state.userInfo.userName?'reply':'reply no-login'">
                 <div class="avatar-wrap">
                   <a class="avatar" href="javascript:;">
                     <img :src="$store.state.userInfo.userName?$store.state.userInfo.userHeadPortraitURL:'http://useravatarimg.oss-cn-hangzhou.aliyuncs.com/UserAvatar/userDefaultHandImg2.jpg'" :alt="$store.state.userInfo.userName">
@@ -161,7 +157,7 @@
                   </div>
                 </div>
               </div>
-              <ul v-if="commentList.total" class="review-ul">
+              <ul v-if="commentList.list" class="review-ul">
                 <li v-for="(item,$index) in commentList.list" class="review-item">
                   <div class="avatar-wrap">
                     <router-link class="avatar" :to="'/reader/'+item.userId">
@@ -290,7 +286,7 @@
               </div>
             </div>
             <div class="recommendList">
-              <zdy-carousel-roll :imgArray="imgArray"></zdy-carousel-roll>
+              <zdy-carousel-roll :imgArray="bookDetail.similarRecommendation"></zdy-carousel-roll>
             </div>
           </div>
           <!--同类推荐书籍列表 end-->
@@ -300,12 +296,12 @@
             <div class="title">
               作者
             </div>
-            <router-link :to="'/reader/'+bookInfo.bookWriterId" target="_blank" :title="readerInfo.pseudonym">
-              <img :src="readerInfo.userHeadPortraitURL" alt="">
+            <router-link :to="'/reader/'+bookDetail.bookListInfo.bookWriterId" target="_blank" :title="bookDetail.AuthorInfo.pseudonym">
+              <img :src="bookDetail.AuthorInfo.userHeadPortraitURL" alt="">
             </router-link>
-            <p class="name txt-overflow">{{readerInfo.pseudonym}}</p>
+            <p class="name txt-overflow">{{bookDetail.AuthorInfo.pseudonym}}</p>
 
-            <p class="font14 clr6">{{readerInfo.userAutograph}}</p>
+            <p class="font14 clr6">{{bookDetail.AuthorInfo.userAutograph}}</p>
           </div>
 
           <!--给作者奖励模块 start-->
@@ -313,10 +309,10 @@
             <div class="title">
               粉丝榜
             </div>
-            <ul v-if="fansList.list" class="fans-list">
+            <ul v-if="bookDetail.fansInfoList.list" class="fans-list">
 
-              <template v-if="fansList.list.length" >
-                <li v-for="(item,$index) in fansList.list" v-if="$index<3">
+              <template v-if="bookDetail.fansInfoList.list.length" >
+                <li v-for="(item,$index) in bookDetail.fansInfoList.list" v-if="$index<3">
                   <span class="fl order">{{$index+1}}</span>
                   <router-link class="fans-face" :to="'/reader/'+item.userId">
                     <img  :src="item.userHeadPortraitURL" :alt="item.userName">
@@ -326,7 +322,7 @@
                     <p class="fr grade">{{item.fansCount}}</p>
                   </div>
                 </li>
-                <li v-for="(item,$index) in fansList.list" v-if="$index>=3&&$index<10">
+                <li v-for="(item,$index) in bookDetail.fansInfoList.list" v-if="$index>=3&&$index<10">
                   <span class="fl order">{{$index+1}}</span>
                   <div class="fans-info">
                     <p class="fans-name txt-overflow">{{item.userName}}</p>
@@ -339,13 +335,15 @@
           </div>
         </div>
       </template>
-      <zdy-hint v-else type="book-not"></zdy-hint>
+      <zdy-hint v-else-if="bookDetail.bookListInfo===''" type="book-not"></zdy-hint>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
   import Vue from 'vue'
   import CarouseRoll from '../carousel/caroual_rec.vue'
+  import {FetchBookDetailData} from '../../api'
+  import { mapGetters } from 'vuex'
   let ERR_OK = 200;
   let ERR_NO = 400;
   export default{
@@ -357,7 +355,7 @@
         return {
           showDetail:false, //是否展示全部书籍简介
           imgArray:[],
-          activeNames:[],
+//          activeNames:[],
           rewardNum:188,
           answer:false, //书评回复状态
           answerTxt:'', //书评回复内容
@@ -367,76 +365,31 @@
           page: 1, //书评列表页码
           page2:1, //书评回复列表页码
           maxPage: 5,
-          totalData:{},
-          chapterList:[],
-          bookData:{}, //书籍数据信息
+//          chapterList:[],
           fansList:{}, //粉丝列表信息
-          readerInfo:{}, //作者相关信息
-          commentList:{   //评论列表信息
-              list:[]
-          },
           reply:'',
-          bookInfo:{},
           onceShow:false,
           minHeight:400
         }
       },
       methods: {
+//        滚动指定高度
+        toLocation(h){
+          if(document.documentElement.scrollTop){
+            document.documentElement.scrollTop = h
+          }else if(document.body.scrollTop) {
+            document.body.scrollTop = h
+          } else{
+            window.pageYOffset = h
+          }
+        },
 //        书评列表分页
-        handleCurrentChange(val) {
-          this.page = val;
-          this.$ajax("/comm-getcomminfo",{
-            id:this.bookInfo.bookId,
-            startPage:val,
-            commentType:0,
-            type:1
-          },json => {
-            if(json.returnCode===ERR_OK){
-              let scrollTop =(h)=>{
-                 if(document.documentElement.scrollTop){
-                    document.documentElement.scrollTop = h
-                 }else if(document.body.scrollTop) {
-                    document.body.scrollTop = h
-                 } else{
-                  window.pageYOffset = h
-                }
-              };
-
-              if(val===1){
-                this.$ajax("/comm-HotCommentInfo",{bookid:this.bookInfo.bookId},res=>{
-                  if(res.returnCode===ERR_OK){
-                      res.data.forEach((item)=>{
-                          item.isHot = true;
-                          for(let k=0,len=json.data.list.length;k<len;k++){
-                              if(json.data.list[k].id===item.id){
-                                  json.data.list.splice(k,1);
-                                  break;
-                              }
-                          }
-                      });
-                      json.data.list = res.data.concat(json.data.list);
-                      this.commentList = json.data;
-                      this.$nextTick(() => {
-                          if(this.pageChange){
-                            scrollTop(620)
-                          }
-                      })
-                  }
-                });
-              }else {
-                this.commentList = json.data;
-                this.$nextTick(() => {
-                    if(this.pageChange){
-                      scrollTop(620)
-                    }
-                })
-              }
-            }
+        handleCurrentChange(page) {
+          this.$store.dispatch("FETCH_COMMENT_LIST",{bid:this.$route.params.bid,page:page}).then(()=>{
             this.$nextTick(()=>{
-              if(this.$route.params.type && this.onceShow){
-                  window.scrollTo(0,600)
-              }
-            });
+              const h = document.getElementById("comment-list-wrap").offsetTop
+              this.toLocation(h)
+            })
           })
         },
 //        书评回复列表
@@ -453,19 +406,9 @@
 //        书籍章节列表
         handleClick1:function (tab) {
             if(tab.name==='second'&& !this.firstOne){
-                this.$ajax("/books-volumeChapterList/"+this.$route.params.bid,'',json => {
-                  if(json.returnCode===ERR_OK){
-                    this.firstOne = true;
-                    let list = [];
-                    json.data.chapterInfo.map((item)=> {
-                      if(item.resultList.length>0){
-                        list.push(item);
-                        this.activeNames.push(list.length);
-                      }
-                    });
-                    this.chapterList = list
-                  }
-                },'get')
+                this.$store.dispatch("FETCH_CHAPTER_LIST",{bid:this.$route.params.bid}).then(()=>{
+                  this.firstOne = true
+                })
             }
         },
 //        打赏、推荐票、金票
@@ -487,10 +430,10 @@
                 let typeUrl;
                 let data = {
                   message:null,
-                  bookid:this.bookInfo.bookId,
-                  bookName:this.bookInfo.bookName,
+                  bookid:this.bookDetail.bookListInfo.bookId,
+                  bookName:this.bookDetail.bookListInfo.bookName,
                   userId:this.$store.state.userInfo.userId,
-                  authorId:this.bookInfo.bookWriterId
+                  authorId:this.bookDetail.bookListInfo.bookWriterId
                 };
                   if(type==='reward'){
 //                   垃圾币打赏
@@ -538,56 +481,12 @@
         },
 //        获取书籍详情页信息
         getBookInfo(){
-          this.$ajax('/book-bookInfo',{
-            bookid:this.$route.params.bid
-          },json => {
-            let data = json.data;
-            if(json.returnCode===ERR_OK){
-//              百度分享
-              let desc = data.bookListInfo.bookName + '是辣鸡小说网作者'+data.bookListInfo.writerName+'全力打造的一部'+data.bookListInfo.classificationName+'小说，辣鸡小说第一时间提供'+data.bookListInfo.bookName+'最新章节，'+data.bookListInfo.bookName+'全文阅读请上辣鸡小说'
-              this.$nextTick(function () {
-                window._bd_share_config = {
-                  common:{
-                    bdText:data.bookListInfo.bookName+'-辣鸡小说',
-                    bdDesc:desc,
-                    bdStyle:0,
-                    bdSize:16
-                  },
-                  share : [
-                    //此处放置分享按钮设置
-                  ]
-                };
-                const s = document.createElement('script');
-                s.type = 'text/javascript';
-                s.id = 'baidu__share'
-                s.src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5);
-                document.body.appendChild(s);
-              })
-              json.data.bookListInfo.bookIntroduction = json.data.bookListInfo.bookIntroduction.replace(/\s*\n+\s*/g,"<br>　　");
-              data.bookListInfo.firstChapter = data.chapterOne.id;
-              this.totalData = data;
-              this.bookInfo = data.bookListInfo;
-              this.bookData = data.bookdate;
-              this.$set(this.bookInfo,'bookLabel',data.bookLable);
-              this.fansList = data.fansInfoList;
-              this.readerInfo  = data.AuthorInfo;
-              this.bookInfo.lastChapter = this.$resetChapterTxt(data.lastChapterView.chapterContent);
-              this.imgArray = data.similarRecommendation;
-              this.handleCurrentChange(1)
-            }else if(json.returnCode===2000){
-              this.bookInfo = ''
-            }
-          });
-          this.$ajax("/userRmemberChose",{bookid:this.$route.params.bid,type:'search',isSelect:0},read=>{
-              if(read.returnCode===200){
-                this.bookInfo.firstChapter = read.id
-              }
-          },'post','json','custom')
+          this.$store.dispatch("FETCH_BOOK_DETAIL",{ bid:this.$route.params.bid })
         },
 //        发布评论
         addComment(){
           if(this.$http.trim(this.commentText).length>0){
-             if(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/.test(this.commentText)){
+             if(this.$regEmoji(this.commentText)){
                this.$message({message:"内容不可包含emoji表情图",type:'warning'});
                return false
              }
@@ -596,8 +495,8 @@
                return false
              }
             this.$ajax('/add-getcomminfo',{
-              bookId:this.bookInfo.bookId,
-              bookName:this.bookInfo.bookName,
+              bookId:this.bookDetail.bookListInfo.bookId,
+              bookName:this.bookDetail.bookListInfo.bookName,
               userName:this.$store.state.userInfo.pseudonym,
               commentContext:this.commentText
             },json => {
@@ -614,7 +513,7 @@
 //        回复评论
         addReplyComment(id,index){
           if(this.$http.trim(this.answerTxt).length>0){
-            if(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/.test(this.commentText)){
+            if(this.$regEmoji(this.commentText)){
               this.$message({message:"内容不可包含emoji表情图",type:'warning'});
               return false
             }
@@ -623,8 +522,8 @@
               return false
             }
             this.$ajax('/add-replyInfo',{
-              bookid:this.bookInfo.bookId,
-              bookName:this.bookInfo.bookName,
+              bookid:this.bookDetail.bookListInfo.bookId,
+              bookName:this.bookDetail.bookListInfo.bookName,
               commentId:id,
               userName:this.$store.state.userInfo.pseudonym,
               replyCommentsContent:this.answerTxt,
@@ -682,12 +581,12 @@
         addBookshelf(){
             if(this.$store.state.userInfo.userId){
                 this.$ajax("/bookshelf-adduserbookshelf",{
-                    bookId:this.bookInfo.bookId,
+                    bookId:this.bookDetail.bookListInfo.bookId,
                     userName:this.$store.state.userInfo.pseudonym,
-                    bookName:this.bookInfo.bookName
+                    bookName:this.bookDetail.bookListInfo.bookName
                 },json=>{
                     if(json.returnCode===200){
-                        this.bookInfo.collectionStatus = (this.bookInfo.collectionStatus?0:1);
+                        this.bookDetail.bookListInfo.collectionStatus = (this.bookDetail.bookListInfo.collectionStatus?0:1);
                         this.$message(json.msg)
                     }
                 })
@@ -697,9 +596,8 @@
         }
       },
       created() {
-//        this.$once(window.location.reload())
+        this.$store.dispatch("FETCH_BOOK_DETAIL",{bid:this.$route.params.bid})
         this.onceShow = true;
-        this.getBookInfo();
       },
       mounted(){
         let height = this.$http(window).height()-440;
@@ -711,11 +609,17 @@
         }
       },
       computed:{
+        ...mapGetters({
+          bookDetail:'bookDetail',
+          commentList:'bookCommentList',
+          chapterList:'chapterList',
+          activeName:'activeName'
+        }),
         words:function () {
           return this.reply.replace(/\s/g,'').length +'/'+this.$http.trim(this.commentText).length
         },
         Title:function () {
-          return this.bookInfo?(this.bookInfo.bookName +'－' +this.bookInfo.writerName):'书籍不存在'
+          return this.bookDetail.bookListInfo?(this.bookDetail.bookListInfo.bookName +'－' +this.bookDetail.bookListInfo.writerName):'书籍不存在'
         }
       }
     };
@@ -723,6 +627,7 @@
 <style lang="stylus" type="text/stylus" rel="stylesheet/stylus">
   font-color = #FB5E6F
   btn-color =  #F77583
+
 .tabWrap
   position relative
   .more
@@ -922,16 +827,16 @@
               display:inline-block
               width 130px
               background-repeat :no-repeat
+              background-position 5px center
           .red-pepper
-            padding-left :22px
-            background: url("../../../static/img/icon/pepper-02.png") no-repeat -3px 1px;
+            padding-left :20px
+            background-image: url("../../assets/image/icon/pepper@x1_4.png");
           .green-pepper
-            padding-left :24px
-            background: url("../../../static/img/icon/pepper-01.png") no-repeat -2px 1px;
+            padding-left :20px
+            background-image: url("../../assets/image/icon/pepper@x1_5.png");
           .gloden-pepper
             padding-left :20px
-            background: url("../../../static/img/icon/pepper-03.png") no-repeat -3px center
-            background-size auto 90%
+            background-image: url("../../assets/image/icon/pepper@x1_6.png")
       .bookIntro
         position relative
         line-height :1.7em
@@ -976,7 +881,7 @@
    border-bottom 1px solid #efefef
    padding-bottom 10px
    >span
-      line-height 28px
+      line-height 38px
   /*作者相关信息 start*/
 .bw-info
   height :112px
@@ -1125,25 +1030,6 @@
     width: 224px
     border-radius :5px
     border:1px solid #F77583
-    &.consume
-      height: 264px
-      li
-        display :list-item
-        height :75px
-        width :100%
-        line-height :75px
-        font-size:15px
-        border-bottom :1px solid #efefef
-        text-indent:114px
-        a
-          display :block
-          background :url("../../assets/image/icon/pepper@1_02.png") no-repeat 45px center
-        &:last-child
-          border :none
-        &:nth-child(2) a
-          background:url("../../assets/image/icon/pepper@1_03.png") no-repeat 41px center
-        &:nth-child(3) a
-          background:url("../../assets/image/icon/pepper@1_01.png") no-repeat 40px center
     &.author
       text-align center
       padding 0 20px 30px

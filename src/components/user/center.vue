@@ -383,18 +383,16 @@
       text-align :center
       >span
         display inline-block
-        padding 5px 0 5px 30px
+        padding 5px 0 5px 26px
         background-repeat no-repeat
         background-position left center
         &.pepper
-          background-image url('../../../static/img/icon/pepper-04.png')
-          padding-left 20px
+          background-image url('../../assets/image/icon/pepper@x1_3.png')
         &.chilli
-          background-image url('../../../static/img/icon/pepper-05.png')
-          background-size auto 100%
-          padding-left 34px
+          background-image url('../..//assets/image/icon/pepper@x1_2.png')
         &.ticket
-            background-image url('../../../static/img/icon/reading-ticket.png')
+          background-image url('../../../static/img/icon/reading-ticket.png')
+          padding-left 30px
  /*我的阅读记录 */
   .mine-record
     background :#fff

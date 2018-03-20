@@ -39,9 +39,9 @@
       },
       resize(val){
         if(val>1024 && val<1440){
-          document.body.style.zoom = 0.952
+          document.getElementById('app').style.zoom = 0.952
         }else {
-          document.body.style.zoom = 1
+          document.getElementById('app').style.zoom = 1
         }
       }
     },

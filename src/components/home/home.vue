@@ -493,47 +493,46 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+import { getWebIndex } from '../../api/index'
+import { mapGetters} from 'vuex'
 export default{
   data: function(){
     return {
       current:0,
       timer:null,
-      latestChapterList:{},
       hotRecommend:[], //首页热门推荐
       autoNotice:[], //滚动网站公告
       times:'',
-      allData:{},
-      latestList:{},
       updateData:[],
       cState1:false,
-      cState2:false
+      cState2:false,
     }
   },
   methods:{
-    getIndex(){
-      this.$ajax('/indexdataload','',json=>{
-        if(json.returnCode===200){
-            json.data = JSON.parse(JSON.stringify(json.data));
-//          分类推荐
-          json.data.bookBatch = json.data.homePageRecommendedByClassFuction.slice(0,6);
-//          新书推荐
-          json.data.newBook = json.data.newBookRecommendedList.slice(0,10);
-          this.allData = json.data;
-        }
-      },'get');
-    },
-    getLatest(){
-        this.$ajax('/stacks-bookFiltering',{order:4},json=>{
-          this.latestList = json.data
-        })
-    },
-    getLastList(){
-      this.$ajax("/getMaxNewChapterVOList",'',json=>{
-        if(json.returnCode===200){
-          this.latestChapterList = json.data
-        }
-      },'get')
-    },
+//    getIndex(){
+//      this.$ajax('/indexdataload','',json=>{
+//        if(json.returnCode===200){
+//            json.data = JSON.parse(JSON.stringify(json.data));
+////          分类推荐
+//          json.data.bookBatch = json.data.homePageRecommendedByClassFuction.slice(0,6);
+////          新书推荐
+//          json.data.newBook = json.data.newBookRecommendedList.slice(0,10);
+//          this.allData = json.data;
+//        }
+//      },'get');
+//    },
+//    getLatest(){
+//        this.$ajax('/stacks-bookFiltering',{order:4},json=>{
+//          this.latestList = json.data
+//        })
+//    },
+//    getLastList(){
+//      this.$ajax("/getMaxNewChapterVOList",'',json=>{
+//        if(json.returnCode===200){
+//          this.latestChapterList = json.data
+//        }
+//      },'get')
+//    },
     exchange(event){
         if(event.target.parentNode.className.indexOf('rank')>-1){
           if(!this.cState1){
@@ -581,14 +580,23 @@ export default{
     }
   },
   created(){
-    this.getIndex();
-    this.getLatest();
-    this.getLastList()
+    this.$store.dispatch('FETCH_INDEX_DATA')
   },
   mounted(){
       this.$nextTick(()=>{
          this.go();
       })
+  },
+  computed:{
+    allData(){
+      return this.$store.getters.indexData("total")
+    },
+    latestChapterList(){
+      return this.$store.getters.indexData("latest")
+    },
+    latestList(){
+      return this.$store.getters.indexData("sign")
+    }
   }
 }
 </script>

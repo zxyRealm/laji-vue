@@ -63,7 +63,7 @@
               let subData = JSON.parse(JSON.stringify(this.loginList));
               subData.isSave = subData.isSave?1:0;
               subData.userPassword = this.$md5(subData.userPassword);
-              this.$aycn("/person-login",subData,(json) => {
+              this.$ajax("/person-login",subData,(json) => {
                   if(json.returnCode===200){
                     this.$store.state.userInfo = json.data;
                     this.$cookie('user_id',json.data.userId);

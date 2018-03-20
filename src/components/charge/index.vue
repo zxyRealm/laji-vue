@@ -40,14 +40,12 @@
               选择金额
             </div>
             <el-radio-group v-model="chargeForm.number" class="charge-number">
-              <el-radio label="6">600辣椒（60元）</el-radio>
+              <el-radio label="6">600辣椒（6元）</el-radio>
               <el-radio label="12">1200辣椒（12元）</el-radio>
               <el-radio label="30">3000辣椒（30元）<br><font color="red">赠送150辣椒券</font></el-radio>
               <el-radio label="50">5000辣椒（50元）<br><font color="red">赠送300辣椒券</font></el-radio>
               <el-radio label="98">9800辣椒（980元）<br><font color="red">赠送800辣椒券</font></el-radio>
               <el-radio label="198">19800辣椒（198元）<br><font color="red">赠送1800辣椒券</font></el-radio>
-              <!--<el-radio label="1">100辣椒 （1元）</el-radio>-->
-              <!--<el-radio label="0.1">10辣椒（0.1元）</el-radio>-->
             </el-radio-group>
             <p class="warmTip">充值每满20元赠送1金椒</p>
           </el-form-item>
